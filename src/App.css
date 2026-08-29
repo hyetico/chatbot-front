@@ -1,0 +1,16 @@
+.app {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 24px 20px;
+  flex: 1;
+  min-height: 100svh;
+  box-sizing: border-box;
+}
+
+.app h1 {
+  margin: 0;
+  font-size: 24px;
+  text-align: center;
+  flex-shrink: 0;
+}

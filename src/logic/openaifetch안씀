@@ -1,0 +1,31 @@
+// API 호출 로직 (fetch)
+
+import { API_ENDPOINTS } from '../constants/api'
+import type { ChatErrorResponse, ChatRequest, ChatResponse } from '../types/openai'
+import { API_BASE, parseErrorMessage } from './openai.utils'
+
+export async function sendChatMessage(
+  prompt: string,
+  timestamp: string,
+): Promise<string> {
+  const body: ChatRequest = { prompt, timestamp }
+
+  const res = await fetch(`${API_BASE}${API_ENDPOINTS.chat}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  })
+
+  const data: ChatResponse | ChatErrorResponse = await res.json()
+
+  if (!res.ok) {
+    throw new Error(parseErrorMessage(data as ChatErrorResponse))
+  }
+
+  const chatData = data as ChatResponse
+  if (!chatData.success) {
+    throw new Error(chatData.message || 'API 요청에 실패했습니다.')
+  }
+
+  return chatData.message || '응답을 받지 못했습니다.'
+}
